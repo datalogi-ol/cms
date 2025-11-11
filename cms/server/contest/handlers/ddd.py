@@ -123,8 +123,6 @@ class DDDLoginHandler(DDDHandler):
             .filter(Contest.id == contest_id)\
             .first()
 
-        logger.warning(participation)
-
         if participation is None:
             self.redirect(config.ddd_url)
             return
@@ -159,8 +157,6 @@ class DDDUpdateUserHandler(DDDHandler):
         user = User.get_from_id(user_id,self.sql_session)
 
         users = self.sql_session.query(User).all()
-
-        logger.warning(users)
 
         user.first_name = payload["first_name"]
         user.last_name = payload["last_name"]
