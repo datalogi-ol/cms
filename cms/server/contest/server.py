@@ -46,7 +46,7 @@ from cms.io import WebService
 from cms.locale import get_translations
 from cms.server.contest.jinja2_toolbox import CWS_ENVIRONMENT
 from cmscommon.binary import hex_to_bin
-from .handlers import HANDLERS
+from .handlers import HANDLERS, CONTESTLESS_HANDLERS
 from .handlers.base import ContestListHandler
 from .handlers.main import MainHandler
 
@@ -91,6 +91,7 @@ class ContestWebServer(WebService):
         else:
             HANDLERS.append((r"/", MainHandler))
             handlers = HANDLERS
+        handlers.extend(CONTESTLESS_HANDLERS)
 
         super().__init__(
             listen_port,

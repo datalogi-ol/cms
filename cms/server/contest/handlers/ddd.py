@@ -156,8 +156,6 @@ class DDDUpdateUserHandler(DDDHandler):
         user_id = int(payload["user_id"])
         user = User.get_from_id(user_id,self.sql_session)
 
-        users = self.sql_session.query(User).all()
-
         user.first_name = payload["first_name"]
         user.last_name = payload["last_name"]
         user.username = payload["username"]

@@ -105,11 +105,12 @@ HANDLERS = [
     # * /static, defined in cms/io/web_service.py
     # * /stl, defined in cms/server/contest/server.py
 
+]
+
+CONTESTLESS_HANDLERS = [
     (r"/ddd/login", DDDLoginHandler),
     (r"/ddd/update_user", DDDUpdateUserHandler),
     (r"/ddd/add_user_to_contest", DDDAddUserToContestHandler),
     (r"/ddd/new_user", DDDNewUserHandler),
 ]
-
-
 __all__ = ["HANDLERS"]
