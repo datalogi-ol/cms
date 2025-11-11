@@ -137,7 +137,7 @@ class DDDLoginHandler(DDDHandler):
         contest = Contest.get_from_id(contest_id,self.sql_session)
 
         if self.is_multi_contest():
-            next_page = self.url[contest.name]
+            next_page = self.url[contest.name]()
         else:
             next_page = self.url()
 
