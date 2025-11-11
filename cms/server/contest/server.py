@@ -86,12 +86,13 @@ class ContestWebServer(WebService):
         if self.contest_id is None:
             HANDLERS.append((r"", MainHandler))
             handlers = [(r'/', ContestListHandler)]
+            handlers.extend(CONTESTLESS_HANDLERS)
             for h in HANDLERS:
                 handlers.append((r'/([^/]+)' + h[0],) + h[1:])
         else:
             HANDLERS.append((r"/", MainHandler))
             handlers = HANDLERS
-        handlers.extend(CONTESTLESS_HANDLERS)
+            handlers.extend(CONTESTLESS_HANDLERS)
 
         super().__init__(
             listen_port,
