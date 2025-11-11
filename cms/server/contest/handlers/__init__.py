@@ -113,4 +113,5 @@ CONTESTLESS_HANDLERS = [
     (r"/ddd/add_user_to_contest", DDDAddUserToContestHandler),
     (r"/ddd/new_user", DDDNewUserHandler),
 ]
-__all__ = ["HANDLERS"]
+
+__all__ = ["HANDLERS", "CONTESTLESS_HANDLERS"]
