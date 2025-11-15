@@ -202,7 +202,7 @@ class Config:
         # Keys for communicating with the DDD main site (different in production)
         self.ddd_jwt_alg = "HS256"
         self.ddd_jwt_key = "eab27693fb749631b3469134f2019d1b"
-        self.ddd_url = "localhost:8000"
+        self.ddd_url = "http://localhost:8000"
 
         # Attempt to load a config file.
         self._load(paths)

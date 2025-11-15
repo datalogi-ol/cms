@@ -74,6 +74,12 @@ class MainHandler(ContestHandler):
     """
     @multi_contest
     def get(self):
+        if self.current_user is None:
+            # DDD Hijack of login page. It is stored dynamically in the template base
+            # This DDD Page will redirect to the login for the contest, if the DDD user
+            # has access to it.
+            self.redirect(f"{config.ddd_url}/cms/login_redirect?contest_id={self.contest.id}")
+            return
         self.render("overview.html", **self.r_params)
 
 
