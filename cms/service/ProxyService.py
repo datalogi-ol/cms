@@ -349,8 +349,10 @@ class ProxyService(TriggeredService):
                 team = participation.team
                 if not participation.hidden:
                     users[encode_id(user.username)] = {
-                        "f_name": user.first_name,
-                        "l_name": user.last_name,
+                        "f_name": user.username
+                            if config.anonymous_ranking else user.first_name,
+                        "l_name": ""
+                            if config.anonymous_ranking else user.last_name,
                         "team": encode_id(team.code)
                                 if team is not None else None,
                     }

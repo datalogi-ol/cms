@@ -42,6 +42,13 @@ abbr {
     width: 200px;
 }
 
+#LogoPanel img {
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+}
 #UpperPanel {
     position: absolute;
     top: 0;
@@ -370,6 +377,9 @@ abbr {
 |                                   ----------                                 |
 \******************************************************************************/
 
+.l_name {
+    display: none;
+}
 
 #Scoreboard {
     width: 100%;

@@ -152,6 +152,7 @@ class Config:
         # ProxyService.
         self.rankings = ["http://usern4me:passw0rd@localhost:8890/"]
         self.https_certfile = None
+        self.anonymous_ranking = True
 
         # PrintingService
         self.max_print_length = 10_000_000  # 10 MB
