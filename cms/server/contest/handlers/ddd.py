@@ -1,7 +1,8 @@
 from .base import BaseHandler
 from cms import config
-from cms.server.contest.authentication import get_password
 from cms.db import Contest, Participation, User
+from cms.server.contest.authentication import get_password
+from cms.service.ProxyService import ProxyExecutor
 from cmscommon.crypto import hash_password
 from cmscommon.datetime import make_timestamp
 
@@ -14,7 +15,9 @@ from sqlalchemy.orm import contains_eager
 import json
 import jwt
 import logging
+import requests
 import secrets
+from urllib.parse import urljoin, urlsplit
 logger = logging.getLogger(__name__)
 
 def get_jwt_payload(token):
@@ -34,6 +37,27 @@ class DDDHandler(BaseHandler):
         serves no purpose and is a hinderance.
         """
         pass
+
+    def reset_ranking(self, old_name=None):
+        reset_type = ProxyExecutor.USER_TYPE
+        if old_name is not None:
+            for ranking in config.rankings:
+                try:
+                    name = ProxyExecutor.RESOURCE_PATHS[reset_type]
+                    url = urljoin(ranking,f"{name}/{old_name}")
+                    auth = urlsplit(url)
+                    res = requests.delete(url,
+                        auth=(auth.username,auth.password),
+                        headers={'content-type': 'application/json'},
+                        verify=config.https_certfile)
+                    if 400 <= res.status_code < 600:
+                        logger.warning(f"{res.status_code} while resetting ranking")
+                except requests.exceptions.RequestException as error:
+                    # Likely because ranking server is not running
+                    logger.warning(f"While resetting ranking got {error}")
+
+
+        self.service.proxy_service.reinitialize()
 
 class DDDNewUserHandler(DDDHandler):
     """DDD New User Handler
@@ -86,6 +110,7 @@ class DDDAddUserToContestHandler(DDDHandler):
             participation = Participation(contest=contest, user=user)
             self.sql_session.add(participation)
             self.sql_session.commit()
+            self.reset_ranking()
             self.write("Added")
         else:
             self.write("Not Added")
@@ -156,12 +181,16 @@ class DDDUpdateUserHandler(DDDHandler):
         user_id = int(payload["user_id"])
         user = User.get_from_id(user_id,self.sql_session)
 
+        old_username = user.username
+
         user.first_name = payload["first_name"]
         user.last_name = payload["last_name"]
         user.username = payload["username"]
         user.email = payload["email"]
         self.sql_session.commit()
 
+        if old_username != user.username:
+            self.reset_ranking(old_username)
         # We don't right now need to create a response, but we will as a placeholder
         response = {}
         self.write(response)
