@@ -53,9 +53,10 @@ from .taskusertest import \
     UserTestIOHandler, \
     UserTestFileHandler
 from .ddd import \
+    DDDAddUserToContestHandler, \
+    DDDGetRanking, \
     DDDLoginHandler, \
     DDDNewUserHandler, \
-    DDDAddUserToContestHandler, \
     DDDUpdateUserHandler
 
 HANDLERS = [
@@ -112,6 +113,7 @@ CONTESTLESS_HANDLERS = [
     (r"/ddd/update_user", DDDUpdateUserHandler),
     (r"/ddd/add_user_to_contest", DDDAddUserToContestHandler),
     (r"/ddd/new_user", DDDNewUserHandler),
+    (r"/ddd/get_ranking", DDDGetRanking),
 ]
 
 __all__ = ["HANDLERS", "CONTESTLESS_HANDLERS"]

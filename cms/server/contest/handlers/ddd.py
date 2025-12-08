@@ -1,6 +1,7 @@
 from .base import BaseHandler
 from cms import config
 from cms.db import Contest, Participation, User
+from cms.grading.scoring import task_score
 from cms.server.contest.authentication import get_password
 from cms.service.ProxyService import ProxyExecutor
 from cmscommon.crypto import hash_password
@@ -12,6 +13,7 @@ except ImportError:
     import tornado.web as tornado_web
 
 from sqlalchemy.orm import contains_eager
+from sqlalchemy.orm import joinedload
 import json
 import jwt
 import logging
@@ -194,3 +196,37 @@ class DDDUpdateUserHandler(DDDHandler):
         # We don't right now need to create a response, but we will as a placeholder
         response = {}
         self.write(response)
+
+class DDDGetRanking(DDDHandler):
+    """
+    DDD Get user score
+    """
+    def post(self):
+        token = self.get_argument("token")
+
+        payload = get_jwt_payload(token)
+        if payload is None:
+            raise tornado_web.HTTPError(400)
+
+        contest_id = payload["contest_id"]
+
+        # This massive joined load gets all the information which we will need
+        # to generating the rankings.
+        self.contest = self.sql_session.query(Contest)\
+            .filter(Contest.id == contest_id)\
+            .options(joinedload('participations'))\
+            .options(joinedload('participations.submissions'))\
+            .options(joinedload('participations.submissions.token'))\
+            .options(joinedload('participations.submissions.results'))\
+            .first()
+
+        scores = {}
+
+        for p in self.contest.participations:
+            total_score = 0.0
+            for task in self.contest.tasks:
+                t_score, t_partial = task_score(p, task, rounded=True)
+                total_score += t_score
+            total_score = round(total_score, self.contest.score_precision)
+            scores[p.user_id] = total_score
+        self.write({"scores": scores})
