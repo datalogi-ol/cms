@@ -74,7 +74,7 @@ class MainHandler(ContestHandler):
     """
     @multi_contest
     def get(self):
-        if self.current_user is None:
+        if self.current_user is None and config.ddd_replace_authentication:
             # DDD Hijack of login page. It is stored dynamically in the template base
             # This DDD Page will redirect to the login for the contest, if the DDD user
             # has access to it.

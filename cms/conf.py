@@ -204,6 +204,7 @@ class Config:
         self.ddd_jwt_alg = "HS256"
         self.ddd_jwt_key = "eab27693fb749631b3469134f2019d1b"
         self.ddd_url = "http://localhost:8000"
+        self.ddd_replace_authentication = True
 
         # Attempt to load a config file.
         self._load(paths)
