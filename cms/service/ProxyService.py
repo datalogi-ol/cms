@@ -348,8 +348,8 @@ class ProxyService(TriggeredService):
                 user = participation.user
                 team = participation.team
                 if not participation.hidden:
-                    users[encode_id(user.username)] = {
-                        "f_name": user.username
+                    users[encode_id(user.id)] = {
+                        "f_name": "Hidden" #user.username
                             if config.anonymous_ranking else user.first_name,
                         "l_name": ""
                             if config.anonymous_ranking else user.last_name,
@@ -394,7 +394,7 @@ class ProxyService(TriggeredService):
         # Data to send to remote rankings.
         submission_id = "%d" % submission.id
         submission_data = {
-            "user": encode_id(submission.participation.user.username),
+            "user": encode_id(submission.participation.user.id),
             "task": encode_id(submission.task.name),
             "time": int(make_timestamp(submission.timestamp))}
 
@@ -428,7 +428,7 @@ class ProxyService(TriggeredService):
         # Data to send to remote rankings.
         submission_id = "%d" % submission.id
         submission_data = {
-            "user": encode_id(submission.participation.user.username),
+            "user": encode_id(submission.participation.user.id),
             "task": encode_id(submission.task.name),
             "time": int(make_timestamp(submission.timestamp))}
 
